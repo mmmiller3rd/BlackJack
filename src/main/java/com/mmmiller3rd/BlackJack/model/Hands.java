@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public class Deck {
-    private List<Card> cards = new ArrayList<>();
-    private int cutIndex;
-    private int readIndex;
+public class Hands {
+    private List<Hand> hands = new ArrayList<>();
 }
