@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.stream.IntStream;
 
 @Slf4j
 @Component
@@ -36,9 +37,9 @@ public class GameService {
 
     public void initializeHands() {
         hands = new Hands();
-        for (int x = 0; x < numPlayers; x++) {
+        IntStream.range(0, numPlayers).forEach(x -> {
             hands.getHands().add(new Hand(x == (playerPosition - 1)));
-        }
+        });
         hands.getHands().add(new Hand());
         hands.getHands().get(numPlayers).setDealer(true);
         hands.getHands().get(numPlayers).setCards(new ArrayList<>());

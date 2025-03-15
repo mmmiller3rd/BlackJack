@@ -2,7 +2,6 @@ package com.mmmiller3rd.BlackJack.controller;
 
 import com.mmmiller3rd.BlackJack.model.Deck;
 import com.mmmiller3rd.BlackJack.model.Hands;
-import com.mmmiller3rd.BlackJack.service.DeckService;
 import com.mmmiller3rd.BlackJack.service.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -12,12 +11,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class BlackJackController {
-    private final DeckService deckService;
     private final GameService gameService;
 
     @Autowired
-    public BlackJackController(DeckService deckService, GameService gameService) {
-        this.deckService = deckService;
+    public BlackJackController(GameService gameService) {
         this.gameService = gameService;
     }
 

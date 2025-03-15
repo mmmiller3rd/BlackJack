@@ -8,68 +8,34 @@ import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.Random;
+import java.util.stream.IntStream;
 
 @Component
 public class DeckService {
 
-    private Random num;
+    private final Random num;
 
     public int numDecks;
     public Deck gameDeck;
 
     public DeckService() {
         num = new Random();
+        gameDeck = new Deck();
     }
 
     public boolean initializeNewGame() {
-        if (num == null) {
-            num = new Random();
-        }
         numDecks = num.nextInt(7) + 2;
         gameDeck = getGameDeck(numDecks);
+        shuffle();
         return true;
     }
 
-    public Deck getGameDeck(int numDecks) {
+    public Deck getGameDeck(Integer numDecks) {
         Deck gameDeck = new Deck();
-        for (int x = 0; x < numDecks; x++) {
+        IntStream.range(0, numDecks).forEach(x -> {
             gameDeck.getCards().addAll(generateDeck().getCards());
-        }
-        shuffle(gameDeck);
-        setCutCard(gameDeck);
+        });
         return gameDeck;
-    }
-
-    public void shuffle() {
-        shuffle(gameDeck);
-        setCutCard(gameDeck);
-    }
-
-    public void setCutCard(Deck gameDeck) {
-        if (num == null) {
-            num = new Random();
-        }
-        int cutIndex = num.nextInt(16) + (int) (gameDeck.getCards().size() * .192308);
-        gameDeck.setCutIndex((gameDeck.getCards().size() - 1) - cutIndex);
-        gameDeck.setReadIndex(0);
-    }
-
-    public void shuffle(Deck deck) {
-        if (num == null) {
-            num = new Random();
-        }
-        int shuffles = num.nextInt(900) + 100;
-        for (int x = 0; x < shuffles; x++) {
-            for (int index = 0; index < deck.getCards().size(); index++) {
-                int swap = num.nextInt(deck.getCards().size());
-                while (swap == index) {
-                    swap = num.nextInt(deck.getCards().size());
-                }
-                Card temp = deck.getCards().get(index);
-                deck.getCards().set(index, deck.getCards().get(swap));
-                deck.getCards().set(swap, temp);
-            }
-        }
     }
 
     public Deck generateDeck() {
@@ -80,5 +46,27 @@ public class DeckService {
             });
         });
         return deck;
+    }
+
+    public void shuffle() {
+        int shuffles = num.nextInt(900) + 100;
+        IntStream.range(0, shuffles).forEach(x -> {
+            for (int index = 0; index < gameDeck.getCards().size(); index++) {
+                int swap = num.nextInt(gameDeck.getCards().size());
+                while (swap == index) {
+                    swap = num.nextInt(gameDeck.getCards().size());
+                }
+                Card temp = gameDeck.getCards().get(index);
+                gameDeck.getCards().set(index, gameDeck.getCards().get(swap));
+                gameDeck.getCards().set(swap, temp);
+            }
+        });
+        setCutCard();
+    }
+
+    public void setCutCard() {
+        int cutIndex = num.nextInt(16) + (int) (gameDeck.getCards().size() * .192308);
+        gameDeck.setCutIndex((gameDeck.getCards().size() - 1) - cutIndex);
+        gameDeck.setReadIndex(0);
     }
 }
